@@ -53,6 +53,7 @@ data/
   techIcons.ts             Mapping: technology name -> icon
   experience.ts            Internships
   projects.ts              Projects
+  personalProjects.ts      Personal projects
   theses.ts                Bachelor's / Master's theses
   education.ts             Education, further training, hobbies
 lib/
