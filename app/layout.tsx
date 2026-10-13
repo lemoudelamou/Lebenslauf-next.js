@@ -1,7 +1,6 @@
 
 import type { Metadata } from "next"
-import { ThemeProvider } from "next-themes"; 
-//@ts-ignore
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-     <html lang="de" suppressHydrationWarning>
+    <html lang="de" suppressHydrationWarning>
       <body>
         <ThemeProvider
           attribute="data-theme"
