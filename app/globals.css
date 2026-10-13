@@ -1,0 +1,1228 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* =============================================================
+   CV PAGE
+   Same class names as before, so your markup does not change.
+
+   Light and dark values live side by side in the tokens, written
+   as light-dark(<light>, <dark>). Theme selection:
+     - default:                     follows the system setting
+     - <html data-theme="light">    forces light
+     - <html data-theme="dark">     forces dark
+
+   1. Tokens            8. Education            Accessibility (13)
+   2. Base              9. About & contact      Print (14)
+   3. Toolbar          10. Inline icons & status
+   4. Layout & cards   11. Footer
+   5. Hero             12. Responsive
+   6. Skills & chips
+   7. Experience
+============================================================= */
+
+
+/* 1. TOKENS
+------------------------------------------------------------- */
+
+.cvp {
+  /* Follow the system by default */
+  color-scheme: light dark;
+
+  /* Brand */
+  --accent: light-dark(#6d28d9, #a78bfa);
+  --accent-strong: light-dark(#5b21b6, #c4b5fd);
+  --accent-2: light-dark(#c026d3, #e879f9);
+  --accent-soft: light-dark(#f3effd, #241b3f);
+  --accent-soft-hover: light-dark(#ebe4fb, #2f2452);
+  --accent-line: light-dark(#e2d9f7, #3b2f66);
+  --accent-line-strong: light-dark(#cdbcf4, #54438f);
+  --accent-glow: light-dark(rgba(109, 40, 217, 0.1), rgba(139, 92, 246, 0.2));
+  --accent-ring: light-dark(rgba(109, 40, 217, 0.14), rgba(167, 139, 250, 0.3));
+  --accent-shadow: light-dark(rgba(109, 40, 217, 0.25), rgba(124, 58, 237, 0.45));
+
+  /* Solid buttons keep a deeper violet in both themes so white text stays readable */
+  --btn-bg: light-dark(#6d28d9, #7c3aed);
+  --btn-bg-hover: light-dark(#5b21b6, #6d28d9);
+
+  /* Neutrals */
+  --ink: light-dark(#1a1830, #f4f2ff);
+  --text: light-dark(#3b3852, #cfcce2);
+  --muted: light-dark(#6b6882, #9d9ab8);
+  --line: light-dark(#ebe8f3, #2a2740);
+  --surface: light-dark(#ffffff, #1a1828);
+  --surface-alt: light-dark(#fbfaff, #161424);
+  --page: light-dark(#f7f6fb, #110f1a);
+  --bar-bg: light-dark(rgba(247, 246, 251, 0.82), rgba(17, 15, 26, 0.8));
+
+  /* Status */
+  --ok: light-dark(#16a34a, #4ade80);
+  --ok-ring: light-dark(rgba(22, 163, 74, 0.18), rgba(74, 222, 128, 0.22));
+
+  /* Shadow colours (much stronger in dark so depth is still visible) */
+  --sh-lo: light-dark(rgba(26, 24, 48, 0.04), rgba(0, 0, 0, 0.3));
+  --sh-mid: light-dark(rgba(26, 24, 48, 0.06), rgba(0, 0, 0, 0.35));
+  --sh-hi: light-dark(rgba(26, 24, 48, 0.1), rgba(0, 0, 0, 0.45));
+
+  /* Shape & depth */
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --radius-sm: 8px;
+
+  --shadow-card: 0 1px 2px var(--sh-lo), 0 8px 24px var(--sh-mid);
+  --shadow-lift: 0 2px 4px var(--sh-lo), 0 14px 32px var(--sh-hi);
+
+  /* Layout */
+  --page-max: 1100px;
+  --gutter: 32px;
+  --card-pad-y: 40px;
+  --card-pad-x: 44px;
+  --ease: 0.18s ease;
+}
+
+/* Manual override, set on <html> by the toggle */
+:root[data-theme="light"] .cvp {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] .cvp {
+  color-scheme: dark;
+}
+
+
+/* 2. BASE
+------------------------------------------------------------- */
+
+.cvp {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+
+  /* "clip" instead of "hidden": hidden turns this element into a scroll
+     container, which silently breaks the sticky toolbar. */
+  overflow-x: clip;
+
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+
+  /* One soft glow at the top, otherwise a calm neutral page */
+  background:
+    radial-gradient(900px 420px at 50% -10%, var(--accent-glow), transparent 70%),
+    var(--page);
+}
+
+.cvp *,
+.cvp *::before,
+.cvp *::after {
+  box-sizing: border-box;
+}
+
+.cvp a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cvp ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cvp dl,
+.cvp dd {
+  margin: 0;
+}
+
+.cvp img {
+  max-width: 100%;
+}
+
+.cvp ::selection {
+  color: var(--ink);
+  background: var(--accent-soft-hover);
+}
+
+
+/* 3. TOOLBAR
+------------------------------------------------------------- */
+
+.cvp .bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  width: 100%;
+  padding: 14px max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter)));
+
+  background: var(--bar-bg);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  backdrop-filter: saturate(160%) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.cvp .search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: 300px;
+  max-width: 100%;
+  padding: 9px 12px 9px 14px;
+
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  transition: border-color var(--ease), box-shadow var(--ease);
+}
+
+.cvp .search:hover {
+  border-color: var(--accent-line-strong);
+}
+
+.cvp .search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.cvp .search input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+
+  font: 400 13px Inter, sans-serif;
+  color: var(--ink);
+}
+
+.cvp .search input::placeholder {
+  color: var(--muted);
+  opacity: 0.85;
+}
+
+/* Hide the browser's own clear button, we render our own "×" */
+.cvp .search input::-webkit-search-cancel-button,
+.cvp .search input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Custom clear button */
+.cvp .search button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+
+  font: 500 14px/1 Inter, sans-serif;
+  color: var(--muted);
+
+  background: var(--line);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background var(--ease), color var(--ease);
+}
+
+.cvp .search button:hover {
+  background: var(--accent-soft-hover);
+  color: var(--accent-strong);
+}
+
+.cvp .pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.cvp .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+
+  font: 500 13px Inter, sans-serif;
+  color: var(--text);
+
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: default;
+  transition: background var(--ease), color var(--ease);
+}
+
+.cvp button.pill {
+  cursor: pointer;
+}
+
+.cvp button.pill:hover {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.cvp button.pill:active {
+  background: var(--accent-soft-hover);
+}
+
+
+/* 4. LAYOUT & CARDS
+------------------------------------------------------------- */
+
+.cvp .wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+
+  width: 100%;
+  max-width: calc(var(--page-max) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding: 40px var(--gutter) 24px;
+}
+
+.cvp .card {
+  min-width: 0;
+  padding: var(--card-pad-y) var(--card-pad-x);
+
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Plain text inside a card (e.g. the "no results" message) */
+.cvp .card > p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Section titles: solid ink with a small accent bar */
+.cvp h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 28px;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.cvp h2::before {
+  content: "";
+  flex: none;
+  width: 4px;
+  height: 20px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+}
+
+
+/* 5. HERO
+------------------------------------------------------------- */
+
+.cvp .hero {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.cvp .photo {
+  position: relative;
+  flex: 0 0 160px;
+  width: 160px;
+  height: 200px;
+
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 4px var(--surface), 0 0 0 5px var(--accent-line), var(--shadow-lift);
+}
+
+.cvp .photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+.cvp .hero-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.cvp .name {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cvp h1 {
+  margin: 8px 0 14px;
+
+  font-size: clamp(32px, 4.2vw, 46px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.cvp .sub {
+  max-width: 62ch;
+  margin: 0;
+
+  font-size: 16px;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.cvp .facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 20px 0 24px;
+
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.cvp .facts span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cvp .facts b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cvp .btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cvp .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+
+  transition: transform var(--ease), border-color var(--ease), color var(--ease),
+    background var(--ease), box-shadow var(--ease);
+}
+
+.cvp .btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  box-shadow: 0 6px 16px var(--sh-mid);
+}
+
+.cvp .btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.cvp .btn.primary {
+  color: #fff;
+  background: var(--btn-bg);
+  border-color: var(--btn-bg);
+  box-shadow: 0 4px 12px var(--accent-shadow);
+}
+
+.cvp .btn.primary:hover {
+  background: var(--btn-bg-hover);
+  border-color: var(--btn-bg-hover);
+  color: #fff;
+  box-shadow: 0 8px 20px var(--accent-shadow);
+}
+
+.cvp .btn.primary:active {
+  box-shadow: 0 2px 6px var(--accent-shadow);
+}
+
+
+/* 6. SKILLS & CHIPS
+------------------------------------------------------------- */
+
+.cvp .eyebrow {
+  margin-bottom: 14px;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cvp .skills {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 56px;
+}
+
+.cvp .skill-group {
+  min-width: 0;
+}
+
+.cvp .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cvp .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px 12px 6px 10px;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-sm);
+
+  transition: background var(--ease), border-color var(--ease);
+}
+
+/* Chips are not clickable, so they only change colour on hover (no lift) */
+.cvp .chip:hover {
+  background: var(--accent-soft-hover);
+  border-color: var(--accent-line-strong);
+}
+
+.cvp .chip i,
+.cvp .tech-dot {
+  flex: none;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.cvp .tech-icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+
+/* Compact chips for technology lists */
+.cvp .chips.small {
+  gap: 6px;
+}
+
+.cvp .chips.small .chip {
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  font-size: 12px;
+}
+
+.cvp .chips.small .tech-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.cvp .chips.small .tech-dot {
+  width: 6px;
+  height: 6px;
+}
+
+
+/* 7. EXPERIENCE
+------------------------------------------------------------- */
+
+.cvp .tl {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  padding-left: 32px;
+}
+
+.cvp .tl::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 4px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--accent-line), var(--line));
+}
+
+.cvp .tl-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.6fr);
+  align-items: start;
+  gap: 40px;
+}
+
+.cvp .dot {
+  position: absolute;
+  top: 8px;
+  left: -33px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 0 4px var(--surface);
+}
+
+.cvp .tl-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.cvp .logo {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 6px var(--sh-mid);
+}
+
+.cvp .org {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  text-wrap: pretty;
+}
+
+.cvp .label {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.cvp .date {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cvp .tl-right {
+  min-width: 0;
+}
+
+.cvp .tl-title {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cvp .tl-right li,
+.cvp .bul li {
+  position: relative;
+  padding-left: 18px;
+
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  text-wrap: pretty;
+}
+
+.cvp .tl-right li {
+  margin-bottom: 8px;
+}
+
+.cvp .tl-right li:last-child {
+  margin-bottom: 0;
+}
+
+.cvp .tl-right li::before,
+.cvp .bul li::before {
+  content: "";
+  position: absolute;
+  top: 0.7em;
+  left: 2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.cvp .tl-right .chips {
+  margin-top: 18px;
+}
+
+
+/* 8. EDUCATION
+------------------------------------------------------------- */
+
+.cvp .edu-row {
+  display: grid;
+  grid-template-columns: 40px 130px minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cvp .edu-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.cvp .edu-ico {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-md);
+}
+
+.cvp .edu-date {
+  padding-top: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.cvp .edu-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.cvp .tag {
+  padding: 2px 10px;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--muted);
+
+  background: var(--page);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.cvp .edu-row .bul {
+  margin-top: 10px;
+}
+
+.cvp .edu-desc {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+
+/* 9. ABOUT & CONTACT
+------------------------------------------------------------- */
+
+.cvp .two {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  padding: 0;
+  overflow: hidden;
+}
+
+.cvp .two > div {
+  min-width: 0;
+  padding: var(--card-pad-y) var(--card-pad-x);
+}
+
+.cvp .side {
+  background: var(--surface-alt);
+  border-left: 1px solid var(--line);
+}
+
+.cvp .dl-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 18px;
+  padding: 16px 0;
+
+  font-size: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cvp .dl-row:first-child {
+  padding-top: 0;
+}
+
+.cvp .dl-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.cvp dt {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.cvp dd {
+  min-width: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.cvp .bul {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cvp .bul a,
+.cvp dd a {
+  transition: color var(--ease);
+}
+
+.cvp .bul a:hover,
+.cvp dd a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-line-strong);
+  text-underline-offset: 3px;
+}
+
+.cvp .rule {
+  height: 1px;
+  margin: 24px 0;
+  background: var(--line);
+}
+
+
+/* 10. INLINE ICONS & STATUS
+------------------------------------------------------------- */
+
+.cvp .icon {
+  flex: none;
+  display: inline-block;
+  vertical-align: -0.15em;
+}
+
+.cvp .facts .icon {
+  color: var(--accent);
+}
+
+.cvp .status-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 3px var(--ok-ring);
+}
+
+
+/* 11. FOOTER
+------------------------------------------------------------- */
+
+.cvp footer {
+  padding: 8px 0 32px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--muted);
+}
+
+
+/* 12. RESPONSIVE
+------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .cvp {
+    --gutter: 22px;
+    --card-pad-y: 30px;
+    --card-pad-x: 30px;
+  }
+
+  .cvp .wrap {
+    gap: 22px;
+    padding-top: 30px;
+  }
+
+  .cvp .hero {
+    gap: 28px;
+  }
+
+  .cvp .photo {
+    flex-basis: 132px;
+    width: 132px;
+    height: 170px;
+  }
+
+  .cvp .skills {
+    gap: 28px 32px;
+  }
+
+  .cvp .tl-item {
+    grid-template-columns: minmax(170px, 0.8fr) minmax(0, 1.4fr);
+    gap: 24px;
+  }
+
+  .cvp .edu-row {
+    grid-template-columns: 40px 110px minmax(0, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Stack About / Contact earlier so neither column gets cramped */
+@media (max-width: 760px) {
+  .cvp .two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cvp .side {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 640px) {
+  .cvp {
+    --gutter: 14px;
+    --card-pad-y: 24px;
+    --card-pad-x: 20px;
+    font-size: 14px;
+  }
+
+  .cvp .bar {
+    position: static;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .cvp .search {
+    width: 100%;
+    padding-block: 11px;
+  }
+
+  /* 16px prevents iOS Safari from zooming in when the field is focused */
+  .cvp .search input {
+    font-size: 16px;
+  }
+
+  .cvp .pills {
+    justify-content: center;
+  }
+
+  .cvp .pill {
+    min-height: 38px;
+  }
+
+  .cvp .wrap {
+    gap: 16px;
+    padding-top: 20px;
+    padding-bottom: 16px;
+  }
+
+  .cvp .card {
+    border-radius: 14px;
+  }
+
+  .cvp .hero {
+    flex-direction: column;
+    gap: 22px;
+    text-align: center;
+  }
+
+  .cvp .photo {
+    flex-basis: auto;
+    width: 120px;
+    height: 150px;
+  }
+
+  .cvp .hero-content {
+    width: 100%;
+  }
+
+  .cvp .sub {
+    margin-inline: auto;
+  }
+
+  .cvp .facts,
+  .cvp .btns {
+    justify-content: center;
+  }
+
+  .cvp .btn {
+    min-height: 44px;
+  }
+
+  .cvp .skills {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+
+  .cvp .tl {
+    gap: 32px;
+    padding-left: 26px;
+  }
+
+  .cvp .dot {
+    left: -27px;
+  }
+
+  .cvp .tl-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .cvp .edu-row {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 10px 12px;
+  }
+
+  .cvp .edu-ico {
+    width: 36px;
+    height: 36px;
+  }
+
+  .cvp .edu-date {
+    padding-top: 8px;
+  }
+
+  .cvp .edu-row > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .cvp .dl-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cvp {
+    --card-pad-y: 20px;
+    --card-pad-x: 16px;
+  }
+
+  .cvp h1 {
+    font-size: 28px;
+  }
+
+  .cvp h2 {
+    font-size: 18px;
+  }
+
+  .cvp .btn {
+    padding: 9px 14px;
+  }
+}
+
+
+/* 13. ACCESSIBILITY
+------------------------------------------------------------- */
+
+.cvp a:focus-visible,
+.cvp button:focus-visible,
+.cvp input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The search field shows its own ring via :focus-within, so skip the
+   second outline on the input itself */
+.cvp .search input:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cvp * {
+    transition: none !important;
+  }
+
+  .cvp .btn:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .cvp {
+    --line: light-dark(#c9c4dc, #4a4668);
+    --muted: light-dark(#4f4c66, #c2bedb);
+  }
+}
+
+
+/* 14. PRINT
+------------------------------------------------------------- */
+
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+@media print {
+  /* Always print in light, even if the screen is dark */
+  .cvp,
+  :root[data-theme] .cvp {
+    color-scheme: light;
+  }
+
+  .cvp {
+    min-height: auto;
+    overflow: visible;
+    font-size: 13px;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cvp .bar {
+    display: none;
+  }
+
+  .cvp .wrap {
+    max-width: none;
+    gap: 14px;
+    padding: 0;
+  }
+
+  .cvp .card {
+    padding: 20px;
+    box-shadow: none;
+  }
+
+  .cvp .two > div {
+    padding: 20px;
+  }
+
+  .cvp .photo {
+    box-shadow: 0 0 0 1px var(--accent-line);
+  }
+
+  /* Keep headings with their content, and keep small blocks in one piece.
+     Whole cards may split across pages so long sections don't leave gaps. */
+  .cvp h2 {
+    break-after: avoid;
+  }
+
+  .cvp .hero,
+  .cvp .two,
+  .cvp .tl-item,
+  .cvp .edu-row,
+  .cvp .skill-group,
+  .cvp .chip {
+    break-inside: avoid;
+  }
+
+  .cvp .btn.primary {
+    box-shadow: none;
+  }
+}
+
+.cvp .theme-toggle {
+  display: inline-grid;
+}
+
+.cvp .theme-opt {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.cvp .theme-to-light {
+  visibility: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .cvp .theme-to-dark {
+    visibility: hidden;
+  }
+  :root:not([data-theme]) .cvp .theme-to-light {
+    visibility: visible;
+  }
+}
+
+/* Manual choice is dark: offer "Hell" */
+:root[data-theme="dark"] .cvp .theme-to-dark {
+  visibility: hidden;
+}
+:root[data-theme="dark"] .cvp .theme-to-light {
+  visibility: visible;
+}
